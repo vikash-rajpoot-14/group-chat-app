@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Member</title>
+    <link rel="stylesheet" defer href="../css/addMember.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="add-member-form">
+        <h2>Enter Email To Add A Member To Group</h2>
+        <button id="close-btn">&times;</button>
+        <form id="my-form">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+  <script src="../js/addMember.js"></script>
+</html>

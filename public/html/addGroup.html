@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Group</title>
+    <link rel="stylesheet" defer href="../css/addGroup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="add-group-form">
+        <button id="close-btn">&times;</button>
+        <form id="my-form">
+          <label for="group-name">Group Name:</label>
+          <input type="text" id="group-name" name="group-name" required />
+          <label for="group-desc">Group Description:</label>
+          <textarea id="group-desc" name="group-desc"></textarea><br />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+  <script src="../js/addGroup.js"></script>
+</html>

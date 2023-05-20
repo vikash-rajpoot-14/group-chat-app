@@ -1,0 +1,338 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  /* padding: 5 5 5 5; */
+  background-color: #dedeef;
+}
+
+.groups {
+  width: 30%;
+  background-color: #f2f2f2;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.chatbox {
+  width: 70%;
+  height: 94%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.chatbox-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #f2f2f2;
+}
+
+.chatbox-messages {
+  height: calc(100% - 70px);
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  background-image: linear-gradient(#b2b1d3, #e9e9e9);
+}
+
+.chatbox-input {
+  display: flex;
+  /* border: 2px solid rgb(43, 41, 41); */
+}
+
+.chatbox-input input {
+  flex-grow: 1;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.chatbox-input button {
+  border: none;
+  border-radius: 5px;
+  font-size: 17px;
+  padding: 0px 9px;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
+}
+
+.chatbox-message {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatbox-message span {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.chatbox-message p {
+  margin: 0;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  max-width: 500px;
+  align-self: flex-start;
+}
+
+.chatbox-message.sent p {
+  background-color: #4caf50;
+  color: #fff;
+  align-self: flex-end;
+}
+.chatbox-message.sent {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  word-wrap: break-word;
+}
+
+.chatbox-message.sent span {
+  font-weight: bold;
+  margin-bottom: 5px;
+  align-self: flex-end;
+}
+.group-container {
+  width: 30%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-image: linear-gradient(transparent, #7481af);
+}
+#form {
+  padding: 2px;
+  border: 2px solid rgb(43, 41, 41);
+}
+
+#multimedia {
+  width: 0vw;
+  background-color: rgb(218, 211, 211);
+  /* border: 2px solid rgb(43, 41, 41); */
+}
+.group-container h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.group-container ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.group-container li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 14px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-color: #98c5c2;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.group-container li:hover {
+  background-color: #f2f2f2;
+}
+
+.group-container li .btn-small {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 50%;
+  background-color: #ea1818;
+  color: #0d0c0c;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.group-container li .btn-small:hover {
+  background-color: #aaa; /* change background color on hover */
+}
+
+.group-container button {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0px;
+  background-color: #3453bf;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.group-container button:hover {
+  background-color: #7991e9;
+}
+.add-member-btn,
+.show-members-btn {
+  margin-left: auto;
+}
+
+.add-member-btn button,
+.show-members-btn button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.add-member-btn button :hover {
+  background-color: #3e8e41;
+}
+.show-members-btn button:hover {
+  background-color: #3e8e41;
+}
+#current-user {
+  margin-right: 10px;
+}
+
+#logout-btn {
+  background-color: #f44336;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: fit-content;
+  margin-left: auto;
+}
+
+.logout {
+  padding: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.logout span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+.members-container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: #f2f2f2;
+  z-index: 999;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: right 0.3s ease-in-out;
+}
+.members-list {
+  margin-right: 50px;
+}
+.members-container.show {
+  right: 0;
+  display: flex;
+  background-image: linear-gradient(white, #8b8bc5);
+  align-items: center;
+}
+.members-container.show ~ .group-container,
+.members-container.show ~ .chatbox {
+  width: calc(35% - 20px);
+  transition: width 0.3s ease-in-out;
+}
+.members-container.show ~ .group-container {
+  overflow-y: hidden;
+}
+.members-list li {
+  display: flex; /* use flexbox layout */
+  justify-content: space-between; /* space elements out */
+  align-items: center; /* vertically center elements */
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  width: 100%;
+  flex: 1;
+  transition: background-color 0.3s ease;
+}
+.members-list ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+.admin {
+  color: red;
+}
+
+.edit-box {
+  display: none;
+}
+
+.member:hover .edit-box,
+.admin:hover .edit-box {
+  display: flex;
+  flex-direction: column;
+}
+.makeadminbtn,
+.rmadminbtn {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+.rmuserbtn {
+  background-color: #da1842;
+  border: none;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.rmadminbtn:hover,
+.makeadminbtn:hover {
+  background-color: #3e8e41; /* darker green */
+}
+.rmuserbtn:hover {
+  background-color: #9c0707;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatsChat</title>
+    <link rel="stylesheet" href="../css/signUp.css" />
+  </head>
+  <body>
+    <div class="welcome">
+      <h1>Welcome to WhatsChat</h1>
+      <h2>Signup to chat with your friends!!</h2>
+    </div>
+    <div class="form-container">
+      <form id="form">
+        <fieldset>
+          <legend>Sign Up</legend>
+          <div class="form-group">
+            <label for="name">Enter Name</label>
+            <input type="text" id="name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Enter Email</label>
+            <input type="email" id="email" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Enter Phone</label>
+            <input type="number" id="phone" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Enter Password</label>
+            <input type="password" id="password" required />
+          </div>
+          <!-- <div class="form-group">
+            <label for="pic">Upload you pic</label>
+            <input type="file" id="pic" />
+          </div> -->
+          <button type="submit">Sign Up</button>
+        </fieldset>
+      </form>
+    </div>
+    <div id="response">
+      <ul id="msg"></ul>
+    </div>
+    <div class="login">
+      <h3>Already user ? Login Here</h3>
+      <a href="login.html">login</a>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+
+  <script src="../js/signup.js"></script>
+</html>

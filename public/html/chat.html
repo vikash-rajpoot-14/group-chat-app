@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatsChat</title>
+    <link rel="stylesheet" href="../css/chat.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="group-container">
+        <div class="logout">
+          <span id="current-user">Username</span>
+          <button id="logout-btn">Logout</button>
+        </div>
+        <button id="create-group-btn">Create Group</button>
+        <ul id="group-list"></ul>
+      </div>
+      <div class="chatbox">
+        <div class="chatbox-header">
+          Chat Box
+          <div class="add-member-btn">
+            <button id="add-member">Add Member</button>
+          </div>
+          <div class="show-members-btn">
+            <button id="show-members">Show Members</button>
+          </div>
+        </div>
+        <div class="chatbox-messages">
+          <div class="chatbox-message">
+            <span>sender:</span>
+            <p>no message</p>
+          </div>
+          <div class="chatbox-message sent" id="chatbox-message-sent">
+            <span>You:</span>
+            <p>no message</p>
+          </div>
+        </div>
+        <div>
+          <div></div>
+          <form id="form">
+            <div class="chatbox-input">
+              <input id="multimedia" type="file" />
+              <input
+                type="text"
+                placeholder="Type your message..."
+                id="new-message"
+                required
+              />
+              <button>Send</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="members-container">
+        <h3>Members</h3>
+        <ul class="members-list">
+          <li>no participants</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../js/chat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+</html>
