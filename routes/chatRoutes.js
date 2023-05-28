@@ -10,6 +10,11 @@ router.post(
   userauthorization.authenticate,
   chatControllers.postChat
 );
+router.post(
+  "/uploadtos3",
+  userauthorization.authenticate,
+  chatControllers.UploadToS3
+);
 router.get(
   "/fetchchat/:lastId",
   userauthorization.authenticate,

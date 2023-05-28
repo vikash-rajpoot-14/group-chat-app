@@ -1,12 +1,16 @@
 const AWS = require("aws-sdk");
 
+// console.log(process.env);
+
 function UploadToS3(data, file) {
   try {
     const BUCKET_NAME = process.env.BUCKET_NAME;
     const AWS_KEY_ID = process.env.AWS_KEY_ID;
     const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+    const region = "us-west-2";
 
     let s3bucket = new AWS.S3({
+      region,
       accessKeyId: AWS_KEY_ID,
       secretAccessKey: AWS_SECRET_KEY,
     });

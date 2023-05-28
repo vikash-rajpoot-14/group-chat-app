@@ -85,11 +85,36 @@ body {
   max-width: 500px;
   align-self: flex-start;
 }
+.chatbox-message a {
+  background-color: #f2f2f2;
+  color: rgb(109, 109, 247);
+  width: 440px;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 2px 0px;
+  text-decoration: none;
+  /* align-self: flex-end; */
+}
+.chatbox-message a:hover {
+  text-decoration: underline;
+}
 
 .chatbox-message.sent p {
   background-color: #4caf50;
   color: #fff;
   align-self: flex-end;
+}
+.chatbox-message.sent a {
+  background-color: #4caf50;
+  color: white;
+  width: 440px;
+  padding: 5px;
+  margin: 2px 0px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+.chatbox-message.sent a:hover {
+  text-decoration: underline;
 }
 .chatbox-message.sent {
   margin-bottom: 10px;

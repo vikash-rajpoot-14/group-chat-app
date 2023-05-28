@@ -14,6 +14,7 @@ const memberListUl = document.querySelector(".members-list");
 const chatbox = document.querySelector(".chatbox");
 const groupContainer = document.querySelector(".group-container");
 const sendBtn = document.querySelector("#send-btn");
+// import UploadToS3 from "./../../controllers/S3";
 
 var socket = io();
 socket.on("connect", () => {
@@ -84,19 +85,38 @@ window.addEventListener("DOMContentLoaded", async () => {
 async function sendData(e) {
   try {
     e.preventDefault();
+    let imageurl;
+    // console.log(multimediaInput.files[0]);
+    const token = localStorage.getItem("token");
 
+    if (multimediaInput.files[0] !== undefined) {
+      let file = multimediaInput.files[0];
+      const filename = file.name;
+      const obj = {
+        data: filename,
+        filename: filename,
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:3000/chat/uploadtos3",
+        obj,
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      imageurl = data.location;
+      // console.log(imageurl);
+    }
     const groupId = localStorage.getItem("activeGroup");
-
-    let { data } = await axios.get("http://localhost:3000/s3Url");
-    console.log(data);
-    let imageurl = data.url.split("?")[0];
-    console.log(imageurl);
+    // console.log(imageurl ? imageurl : null);
     const newMessage = {
-      file: imageurl,
+      file: imageurl ? imageurl : null,
       message: messageInput.value,
       groupId,
     };
-    const token = localStorage.getItem("token");
+    // console.log(newMessage);
     const serverResponse = await axios.post(
       "http://localhost:3000/chat/sendmessage",
       newMessage,
@@ -106,45 +126,62 @@ async function sendData(e) {
         },
       }
     );
+    // console.log(serverResponse);
     if (serverResponse.status === 200) {
+      multimediaInput.value = null;
       imageurl = "";
       messageInput.value = "";
-      console.log("object", serverResponse);
+      // console.log(serverResponse);
+      socket.emit("new message", serverResponse);
+      // console.log("object", serverResponse);
     }
-    socket.emit("new message", serverResponse);
-
-    //updateChatList(serverResponse.data.message)
-    // messageInput.value = "";
   } catch (error) {
     console.log(error);
   }
 }
 socket.on("message recieved", (message) => {
-  let msg = message.data;
-  updateChatList(msg.message, msg.name);
+  let msg = message.data.message;
+  // console.log(msg);
+  updateChatList(msg.message, msg.from, msg.file);
   scrolltoBottom();
 });
 
-function updateChatList(message, from) {
+function updateChatList(message, from, file) {
   const newMessageEl = document.createElement("div");
   if (from === username.textContent) {
     newMessageEl.classList.add("chatbox-message", "sent");
-    newMessageEl.innerHTML = `
+    if (file === null) {
+      newMessageEl.innerHTML = `
         <span>You:</span>
         <p>${message}</p>
     `;
+    } else {
+      newMessageEl.innerHTML = `
+        <span>You:</span>
+        <p>${message}</p>
+        <a href=${file}>${file}</a>
+    `;
+    }
   } else {
     newMessageEl.classList.add("chatbox-message");
-    newMessageEl.innerHTML = `
+    if (file === null) {
+      newMessageEl.innerHTML = `
         <span>${from}:</span>
         <p>${message}</p>
     `;
+    } else {
+      newMessageEl.innerHTML = `
+        <span>${from}:</span>
+        <p>${message}</p>
+        <a href=${file}>${file}</a>
+    `;
+    }
   }
   chatList.appendChild(newMessageEl);
 }
 
 async function fetchAndShowChat(groupId) {
-  // console.log("fetchgroupchat", groupId);
+  console.log("fetchgroupchat", groupId);
   let oldText = JSON.parse(localStorage.getItem("messages"));
   let lastMsgId = localStorage.getItem("lastChatId");
   if (!oldText || oldText.length === 0) {
@@ -163,7 +200,7 @@ async function fetchAndShowChat(groupId) {
     const newMsg = response.data.chat;
 
     let msg = oldText.concat(newMsg);
-
+    // console.log(msg);
     if (msg.length > 20) {
       msg = msg.slice(msg.length - 20, msg.length);
     }
@@ -171,7 +208,7 @@ async function fetchAndShowChat(groupId) {
     chatList.innerHTML = "";
     const msgToShow = msg.filter((item) => item.groupId == groupId);
     msgToShow.forEach((element) => {
-      updateChatList(element.message, element.from);
+      updateChatList(element.message, element.from, element?.file);
     });
     scrolltoBottom();
   }

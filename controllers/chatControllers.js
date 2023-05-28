@@ -1,12 +1,28 @@
 const Message = require("../models/message");
 const { Op } = require("sequelize");
-// const uploadtoS3 = require("../controllers/S3");
+const uploadtoS3 = require("../controllers/S3");
+
+exports.UploadToS3 = async (req, res) => {
+  // console.log(req.body);
+  try {
+    const { data, filename } = req.body;
+    const location = await uploadtoS3(data, filename);
+    // const image = location.Location;
+    res.status(200).json({
+      status: "success",
+      location,
+    });
+  } catch (err) {
+    res.status(500).json({ success: "false", err });
+  }
+};
 
 exports.postChat = async (req, res) => {
   try {
     // console.log(req.body);
     const user = req.user;
     const { file, message, groupId } = req.body;
+    // console.log(req.user.name);
     if (message === "" && file === null) {
       return res
         .status(401)
@@ -18,6 +34,7 @@ exports.postChat = async (req, res) => {
       groupId,
       from: req.user.name,
     });
+    // console.log(newMessage);
     res.status(200).json({ success: true, message: newMessage });
     //   .json({ success: "true", name: user.name, message: newMessage.message });
   } catch (error) {
