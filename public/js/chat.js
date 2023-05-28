@@ -4,7 +4,7 @@ const messageDisplay = document.getElementById("new-message-display");
 const chatList = document.querySelector(".chatbox-messages");
 const createGroup = document.getElementById("create-group-btn");
 const groupList = document.getElementById("group-list");
-
+const multimediaInput = document.getElementById("multimedia");
 const addMemberBtn = document.getElementById("add-member");
 const logOut = document.getElementById("logout-btn");
 const username = document.getElementById("current-user");
@@ -13,6 +13,7 @@ const membersContainer = document.querySelector(".members-container");
 const memberListUl = document.querySelector(".members-list");
 const chatbox = document.querySelector(".chatbox");
 const groupContainer = document.querySelector(".group-container");
+const sendBtn = document.querySelector("#send-btn");
 
 var socket = io();
 socket.on("connect", () => {
@@ -38,7 +39,6 @@ showMemberBtn.addEventListener("click", async () => {
   const activeGroup = localStorage.getItem("activeGroup");
   fetchAndShowMembers(activeGroup);
 });
-form.addEventListener("submit", sendChat);
 
 createGroup.addEventListener("click", () => {
   window.location.href = "addGroup.html";
@@ -79,11 +79,20 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.log(err);
   }
 });
-async function sendChat(e) {
+// form.addEventListener("submit", sendChat);
+
+async function sendData(e) {
   try {
     e.preventDefault();
+
     const groupId = localStorage.getItem("activeGroup");
+
+    let { data } = await axios.get("http://localhost:3000/s3Url");
+    console.log(data);
+    let imageurl = data.url.split("?")[0];
+    console.log(imageurl);
     const newMessage = {
+      file: imageurl,
       message: messageInput.value,
       groupId,
     };
@@ -91,12 +100,21 @@ async function sendChat(e) {
     const serverResponse = await axios.post(
       "http://localhost:3000/chat/sendmessage",
       newMessage,
-      { headers: { Authorization: token } }
+      {
+        headers: {
+          authorization: token,
+        },
+      }
     );
+    if (serverResponse.status === 200) {
+      imageurl = "";
+      messageInput.value = "";
+      console.log("object", serverResponse);
+    }
     socket.emit("new message", serverResponse);
 
     //updateChatList(serverResponse.data.message)
-    messageInput.value = "";
+    // messageInput.value = "";
   } catch (error) {
     console.log(error);
   }
@@ -139,7 +157,7 @@ async function fetchAndShowChat(groupId) {
   const token = localStorage.getItem("token");
   const response = await axios.get(
     `http://localhost:3000/chat/fetchchat/${lastMsgId}`,
-    { headers: { Authorization: token } }
+    { headers: { authorization: token } }
   );
   if (response.status == 200) {
     const newMsg = response.data.chat;
@@ -168,7 +186,7 @@ async function displayGroupOnLoad() {
     const token = localStorage.getItem("token");
     const serverResponse = await axios.get(
       `http://localhost:3000/groups/getAllGroups`,
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
 
     groupList.innerHTML = "";
@@ -199,7 +217,7 @@ async function deleteGroup(groupId) {
     const token = localStorage.getItem("token");
     const deleteResponse = await axios.delete(
       `http://localhost:3000/deletegroup/${groupId}`,
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
     // console.log(deleteResponse);
     alert(deleteResponse.data.message);
@@ -215,7 +233,7 @@ async function fetchAndShowMembers(activeGroup) {
     const token = localStorage.getItem("token");
     const getMembersResponse = await axios.get(
       `http://localhost:3000/admin/getAllMembers/${activeGroup}`,
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
     // console.log(getMembersResponse.data.members);
     updateMemberList(getMembersResponse.data.members);
@@ -271,7 +289,7 @@ async function makeAdmin(userId, token, groupId) {
         groupId,
         userId,
       },
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
     // console.log(res);
     if (res.status == 200) {
@@ -292,7 +310,7 @@ async function removeAdmin(userId, token, groupId) {
         userId: userId,
         groupId: groupId,
       },
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
     // console.log(removeAdminResponse);
     if (removeAdminResponse.status == 200) {
@@ -310,7 +328,7 @@ async function removeUser(userId, token, groupId) {
         userId: userId,
         groupId: groupId,
       },
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
     // console.log(removeUserResponse);
     if (removeUserResponse.status == 200) {

@@ -1,10 +1,19 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
 
-const userAuthorization = require("../middleware/authenticate")
-const chatControllers = require("../controllers/chatControllers")
+const userauthorization = require("../middleware/authenticate");
+const chatControllers = require("../controllers/chatControllers");
 
-router.post("/sendmessage", userAuthorization.authenticate, chatControllers.postChat)
-router.get("/fetchchat/:lastId", userAuthorization.authenticate, chatControllers.fetchChat)
+router.post(
+  "/sendmessage",
+  userauthorization.authenticate,
+  chatControllers.postChat
+);
+router.get(
+  "/fetchchat/:lastId",
+  userauthorization.authenticate,
+  chatControllers.fetchChat
+);
 
-module.exports = router
+module.exports = router;

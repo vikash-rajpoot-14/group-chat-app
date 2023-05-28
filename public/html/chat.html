@@ -41,14 +41,18 @@
           <div></div>
           <form id="form">
             <div class="chatbox-input">
-              <input id="multimedia" type="file" />
+              <input
+                id="multimedia"
+                name="multimedia"
+                type="file"
+                placeholder="upload file"
+              />
               <input
                 type="text"
                 placeholder="Type your message..."
                 id="new-message"
-                required
               />
-              <button>Send</button>
+              <button type="button" onclick="sendData(event)">Send</button>
             </div>
           </form>
         </div>

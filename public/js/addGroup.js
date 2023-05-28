@@ -21,7 +21,7 @@ async function addGroup(e) {
     const serverResponse = await axios.post(
       "http://localhost:3000/groups/addgroup",
       groupDetails,
-      { headers: { Authorization: token } }
+      { headers: { authorization: token } }
     );
     console.log(serverResponse);
     if (serverResponse.status === 200) {

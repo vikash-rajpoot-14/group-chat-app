@@ -1,14 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
 const path = require("path");
+const { generateUploadURL } = require("./util/s3");
 
 dotenv.config({ path: `${__dirname}/config.env` });
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const sequelize = require("./util/database");
 
 const User = require("./models/user");
@@ -32,6 +33,11 @@ Message.belongsTo(Group);
 User.hasMany(Forgetpassword);
 Forgetpassword.belongsTo(User);
 
+app.post("/s3Url", async (req, res) => {
+  const file = req.body;
+  const url = await generateUploadURL();
+  res.send({ url });
+});
 app.use(authRoutes);
 app.use(forgotPasswordRoute);
 app.use("/chat", chatRoutes);
