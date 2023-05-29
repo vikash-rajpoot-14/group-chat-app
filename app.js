@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
-const { generateUploadURL } = require("./util/s3");
 
 dotenv.config({ path: `${__dirname}/config.env` });
 

@@ -3,8 +3,6 @@ const sequelize = require("sequelize");
 const Op = sequelize.Op;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const AWS = require("aws-sdk");
-const UploadToS3 = require("./S3");
 
 function validate(inputString) {
   if (inputString == undefined || inputString.length === 0) {

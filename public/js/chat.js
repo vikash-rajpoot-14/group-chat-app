@@ -14,17 +14,11 @@ const memberListUl = document.querySelector(".members-list");
 const chatbox = document.querySelector(".chatbox");
 const groupContainer = document.querySelector(".group-container");
 const sendBtn = document.querySelector("#send-btn");
-// import UploadToS3 from "./../../controllers/S3";
 
 var socket = io();
 socket.on("connect", () => {
   console.log(`you are connected with ${socket.id}`);
 });
-
-// socket.emit("setup", user);
-// socket.on("connected", () => {
-//   console.log("you are connected");
-// });
 
 showMemberBtn.addEventListener("click", async () => {
   membersContainer.classList.toggle("show");
@@ -49,11 +43,6 @@ addMemberBtn.addEventListener("click", () => {
 });
 groupList.addEventListener("click", (e) => {
   let groupId;
-  //console.log(e.target.id)
-  // let previntervalId = localStorage.getItem("intervalId");
-  // if (previntervalId) {
-  //   clearInterval(previntervalId);
-  // }
   if (e.target.nodeName == "BUTTON") {
     groupId = e.target.parentElement.id;
     return deleteGroup(groupId);
@@ -67,9 +56,6 @@ groupList.addEventListener("click", (e) => {
       fetchAndShowChat(groupId);
     });
   }
-  // let intervalId = setInterval(() => {
-  //   fetchAndShowChat(groupId, intervalId);
-  // }, 1000);
 });
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -80,60 +66,35 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.log(err);
   }
 });
-// form.addEventListener("submit", sendChat);
 
 async function sendData(e) {
   try {
     e.preventDefault();
-    let imageurl;
-    // console.log(multimediaInput.files[0]);
+    const groupId = localStorage.getItem("activeGroup");
     const token = localStorage.getItem("token");
 
-    if (multimediaInput.files[0] !== undefined) {
-      let file = multimediaInput.files[0];
-      const filename = file.name;
-      const obj = {
-        data: filename,
-        filename: filename,
-      };
+    let file = multimediaInput.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("message", messageInput.value);
+    formData.append("groupId", groupId);
 
-      const { data } = await axios.post(
-        "http://localhost:3000/chat/uploadtos3",
-        obj,
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      imageurl = data.location;
-      // console.log(imageurl);
-    }
-    const groupId = localStorage.getItem("activeGroup");
-    // console.log(imageurl ? imageurl : null);
-    const newMessage = {
-      file: imageurl ? imageurl : null,
-      message: messageInput.value,
-      groupId,
-    };
-    // console.log(newMessage);
-    const serverResponse = await axios.post(
+    const serverresponse = await axios.post(
       "http://localhost:3000/chat/sendmessage",
-      newMessage,
+      formData,
       {
         headers: {
+          "Content-Type": "multipart/form-data",
           authorization: token,
         },
       }
     );
-    // console.log(serverResponse);
-    if (serverResponse.status === 200) {
+    console.log(serverresponse);
+    if (serverresponse.status === 200) {
       multimediaInput.value = null;
       imageurl = "";
       messageInput.value = "";
-      // console.log(serverResponse);
-      socket.emit("new message", serverResponse);
-      // console.log("object", serverResponse);
+      socket.emit("new message", serverresponse);
     }
   } catch (error) {
     console.log(error);
@@ -159,7 +120,7 @@ function updateChatList(message, from, file) {
       newMessageEl.innerHTML = `
         <span>You:</span>
         <p>${message}</p>
-        <a href=${file}>${file}</a>
+        <a href=${file} target="_blank">${file}</a>
     `;
     }
   } else {
@@ -173,7 +134,7 @@ function updateChatList(message, from, file) {
       newMessageEl.innerHTML = `
         <span>${from}:</span>
         <p>${message}</p>
-        <a href=${file}>${file}</a>
+        <a href=${file} target="_blank">${file}</a>
     `;
     }
   }

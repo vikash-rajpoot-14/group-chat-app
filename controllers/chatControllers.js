@@ -1,42 +1,68 @@
 const Message = require("../models/message");
 const { Op } = require("sequelize");
-const uploadtoS3 = require("../controllers/S3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 
-exports.UploadToS3 = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const { data, filename } = req.body;
-    const location = await uploadtoS3(data, filename);
-    // const image = location.Location;
-    res.status(200).json({
-      status: "success",
-      location,
-    });
-  } catch (err) {
-    res.status(500).json({ success: "false", err });
-  }
-};
+const bucketName = process.env.AWS_BUCKET_NAME;
+const region = process.env.AWS_BUCKET_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
 
 exports.postChat = async (req, res) => {
   try {
-    // console.log(req.body);
     const user = req.user;
-    const { file, message, groupId } = req.body;
-    // console.log(req.user.name);
-    if (message === "" && file === null) {
+    const { message, groupId } = req.body;
+    console.log(message, groupId);
+    if (message === "" && req.file === undefined) {
       return res
-        .status(401)
+        .status(500)
         .json({ message: "invalid message", success: "false" });
     }
-    const newMessage = await user.createMessage({
-      file,
-      message,
-      groupId,
-      from: req.user.name,
-    });
-    // console.log(newMessage);
-    res.status(200).json({ success: true, message: newMessage });
-    //   .json({ success: "true", name: user.name, message: newMessage.message });
+    if (req.file !== undefined || message === "") {
+      const params = {
+        Bucket: bucketName,
+        Body: req.file.buffer,
+        Key: req.file.originalname,
+        ContentType: req.file.mimetype,
+      };
+      const command = new PutObjectCommand(params);
+      await s3.send(command);
+      const getparams = {
+        Bucket: bucketName,
+        Key: req.file.originalname,
+      };
+      const getcommand = new GetObjectCommand(getparams);
+
+      const url = await getSignedUrl(s3, getcommand, { expiresIn: 3600 });
+      const imageurl = url.split("?")[0];
+      const newMessage = await user.createMessage({
+        file: imageurl,
+        message,
+        groupId,
+        from: req.user.name,
+      });
+      res.status(200).json({ success: true, message: newMessage });
+    } else {
+      const newMessage = await user.createMessage({
+        file: null,
+        message,
+        groupId,
+        from: req.user.name,
+      });
+      res.status(200).json({ success: true, message: newMessage });
+    }
   } catch (error) {
     res.status(500).json({ success: "false", error });
   }
