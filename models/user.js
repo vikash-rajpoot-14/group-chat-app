@@ -22,11 +22,11 @@ const User = sequelize.define("user", {
   password: {
     type: Sequelize.STRING,
   },
-  // pic: {
-  //   type: Sequelize.STRING,
-  //   defaultValue:
-  //     "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-  // },
+  pic: {
+    type: Sequelize.STRING,
+    defaultValue:
+      "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+  },
 });
 
 module.exports = User;

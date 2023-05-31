@@ -24,7 +24,7 @@ exports.postChat = async (req, res) => {
   try {
     const user = req.user;
     const { message, groupId } = req.body;
-    console.log(message, groupId);
+    // console.log(message, groupId);
     if (message === "" && req.file === undefined) {
       return res
         .status(500)
@@ -51,7 +51,7 @@ exports.postChat = async (req, res) => {
         file: imageurl,
         message,
         groupId,
-        from: req.user.name,
+        from: req.user.pic,
       });
       res.status(200).json({ success: true, message: newMessage });
     } else {
@@ -59,7 +59,7 @@ exports.postChat = async (req, res) => {
         file: null,
         message,
         groupId,
-        from: req.user.name,
+        from: req.user.pic,
       });
       res.status(200).json({ success: true, message: newMessage });
     }

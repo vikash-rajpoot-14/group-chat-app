@@ -95,11 +95,10 @@ exports.makeAdmin = async (req, res) => {
     let groupId = req.body.groupId;
     let userIdToBeAdmin = req.body.userId;
     let user = await User.findByPk(userIdToBeAdmin);
-
+    // console.log(user, groupId);
     if (!user) {
       return res.status(403).json({ message: "User Not Found" });
     }
-
     const verifiedAdmin = await GroupUser.findOne({
       where: {
         [Op.and]: [

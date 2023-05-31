@@ -8,12 +8,23 @@ const multimediaInput = document.getElementById("multimedia");
 const addMemberBtn = document.getElementById("add-member");
 const logOut = document.getElementById("logout-btn");
 const username = document.getElementById("current-user");
+const userimage = document.getElementById("userimage");
 const showMemberBtn = document.getElementById("show-members");
 const membersContainer = document.querySelector(".members-container");
 const memberListUl = document.querySelector(".members-list");
 const chatbox = document.querySelector(".chatbox");
 const groupContainer = document.querySelector(".group-container");
 const sendBtn = document.querySelector("#send-btn");
+const loader = document.getElementById("loader");
+
+function showLoader() {
+  loader.style.display = "block";
+}
+
+function hideLoader() {
+  loader.style.display = "none";
+}
+// showLoader();
 
 var socket = io();
 socket.on("connect", () => {
@@ -60,6 +71,7 @@ groupList.addEventListener("click", (e) => {
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
+    userimage.src = localStorage.getItem("userpic");
     username.textContent = localStorage.getItem("username");
     displayGroupOnLoad();
   } catch (err) {
@@ -70,6 +82,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 async function sendData(e) {
   try {
     e.preventDefault();
+    showLoader();
     const groupId = localStorage.getItem("activeGroup");
     const token = localStorage.getItem("token");
 
@@ -89,14 +102,16 @@ async function sendData(e) {
         },
       }
     );
-    console.log(serverresponse);
+    // console.log(serverresponse);
     if (serverresponse.status === 200) {
+      hideLoader();
       multimediaInput.value = null;
       imageurl = "";
       messageInput.value = "";
       socket.emit("new message", serverresponse);
     }
   } catch (error) {
+    hideLoader();
     console.log(error);
   }
 }
@@ -109,17 +124,22 @@ socket.on("message recieved", (message) => {
 
 function updateChatList(message, from, file) {
   const newMessageEl = document.createElement("div");
-  if (from === username.textContent) {
+  if (from === userimage.src) {
     newMessageEl.classList.add("chatbox-message", "sent");
+    const userpic = localStorage.getItem("userpic");
     if (file === null) {
       newMessageEl.innerHTML = `
-        <span>You:</span>
-        <p>${message}</p>
+      <div class="msg-to">
+      <img src=${userpic} width="35px" height="35px" alt="" id="userimage" />
+      <p>${message}</p>
+          </div>
     `;
     } else {
       newMessageEl.innerHTML = `
-        <span>You:</span>
-        <p>${message}</p>
+      <div class="msg-to">
+      <img src=${userpic} width="35px" height="35px" alt="" id="userimage" />
+      <p>${message}</p>
+          </div>
         <a href=${file} target="_blank">${file}</a>
     `;
     }
@@ -127,13 +147,17 @@ function updateChatList(message, from, file) {
     newMessageEl.classList.add("chatbox-message");
     if (file === null) {
       newMessageEl.innerHTML = `
-        <span>${from}:</span>
+      <div class="msg-from">
+        <img src=${from} width="35px" height="35px" alt="" id="userimage" />
         <p>${message}</p>
+        </div>
     `;
     } else {
       newMessageEl.innerHTML = `
-        <span>${from}:</span>
-        <p>${message}</p>
+        <div class="msg-from">
+        <img src=${from} width="35px" height="35px" alt="" id="userimage" />
+        <p >${message}</p>
+          </div>
         <a href=${file} target="_blank">${file}</a>
     `;
     }
@@ -211,13 +235,12 @@ logOut.addEventListener("click", () => {
 });
 async function deleteGroup(groupId) {
   try {
-    // console.log(groupId);
+    console.log(groupId);
     const token = localStorage.getItem("token");
     const deleteResponse = await axios.delete(
-      `http://localhost:3000/deletegroup/${groupId}`,
+      `http://localhost:3000/groups/deletegroup/${groupId}`,
       { headers: { authorization: token } }
     );
-    // console.log(deleteResponse);
     alert(deleteResponse.data.message);
     if (deleteResponse.data.success == "true") {
       displayGroupOnLoad();
@@ -280,6 +303,7 @@ function handleMembers(e) {
   }
 }
 async function makeAdmin(userId, token, groupId) {
+  console.log(userId, groupId);
   try {
     let res = await axios.post(
       "http://localhost:3000/admin/makeAdmin",
@@ -289,7 +313,7 @@ async function makeAdmin(userId, token, groupId) {
       },
       { headers: { authorization: token } }
     );
-    // console.log(res);
+    console.log(res);
     if (res.status == 200) {
       fetchAndShowMembers(groupId);
     }

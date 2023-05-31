@@ -20,6 +20,7 @@ async function login(e) {
     if (serverResponse.data.success === "true") {
       localStorage.setItem("token", serverResponse.data.token);
       localStorage.setItem("username", serverResponse.data.username);
+      localStorage.setItem("userpic", serverResponse.data.userpic);
       setTimeout(() => {
         window.location.href = "../html/chat.html";
       }, 2000);
